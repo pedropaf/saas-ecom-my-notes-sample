@@ -7,6 +7,7 @@
 body {
     overflow-x: hidden;
     font-family: "Roboto Slab","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 15px;
 }
 
 .text-muted {
@@ -341,7 +342,7 @@ section h3.section-subheading {
 
 @media(min-width:768px) {
     section {
-        padding: 150px 0;
+        padding: 120px 0;
     }
 }
 
@@ -953,4 +954,30 @@ body {
 
 .faq {
     margin-bottom: 50px;
+}
+
+.logo-xl {
+    font-size: 4em;
+    text-align: center;
+    color: #fec503;
+    font-family: "Kaushan Script","Helvetica Neue",Helvetica,Arial,cursive;
+    margin: 40px 0 30px 0;
+}
+
+.logo-xl:hover {
+    text-decoration: none;
+}
+
+.simple-footer {
+    margin-top: 50px;
+}
+
+.form-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.login-links a {
+    font-size: 16px;
+    color: black;
 }

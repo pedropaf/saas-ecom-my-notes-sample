@@ -134,15 +134,16 @@ namespace MyNotes.Controllers
             }
         }
 
-        //
         // GET: /Account/Register
         [AllowAnonymous]
-        public ActionResult Register()
+        public ActionResult Register(string plan)
         {
-            return View();
+            return View(new RegisterViewModel
+            {
+                SubscriptionPlan = plan
+            });
         }
 
-        //
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
