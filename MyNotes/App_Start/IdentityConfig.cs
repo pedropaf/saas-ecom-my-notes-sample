@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Mandrill;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -12,10 +15,70 @@ namespace MyNotes
 {
     public class EmailService : IIdentityMessageService
     {
+        private readonly MandrillApi _mandrill;
+        private const string EmailFromAddress = "no-reply@mynotes.com";
+        private const string EmailFromName = "My Notes";
+
+        public EmailService()
+        {
+            _mandrill = new MandrillApi(ConfigurationManager.AppSettings["MandrillApiKey"]);
+        }
+
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            var task = _mandrill.SendMessageAsync(new EmailMessage
+            {
+                from_email = EmailFromAddress,
+                from_name = EmailFromName,
+                subject = message.Subject,
+                to = new List<Mandrill.EmailAddress> { new EmailAddress(message.Destination) },
+                html = message.Body
+            });
+
+            return task;
+        }
+
+        public Task SendWelcomeEmail(string firstName, string email)
+        {
+            const string subject = "Welcome to My Notes";
+
+            var emailMessage = new EmailMessage
+            {
+                from_email = EmailFromAddress,
+                from_name = EmailFromName,
+                subject = subject,
+                to = new List<Mandrill.EmailAddress> { new EmailAddress(email) },
+                merge = true,
+            };
+
+            emailMessage.AddGlobalVariable("subject", subject);
+            emailMessage.AddGlobalVariable("FIRST_NAME", firstName);
+
+            var task = _mandrill.SendMessageAsync(emailMessage, "welcome-my-notes-saas", null);
+
+            task.Wait();
+
+            return task;
+        }
+
+        public Task SendResetPasswordEmail(string firstName, string email, string resetLink)
+        {
+            const string subject = "Reset My Notes Password Request";
+
+            var emailMessage = new EmailMessage
+            {
+                from_email = EmailFromAddress,
+                from_name = EmailFromName,
+                subject = subject,
+                to = new List<Mandrill.EmailAddress> { new EmailAddress(email) }
+            };
+            emailMessage.AddGlobalVariable("subject", subject);
+            emailMessage.AddGlobalVariable("FIRST_NAME", firstName);
+            emailMessage.AddGlobalVariable("RESET_PASSWORD_LINK", resetLink);
+
+            var task = _mandrill.SendMessageAsync(emailMessage, "reset-password-notes-saas", null);
+
+            return task;
         }
     }
 
@@ -81,6 +144,12 @@ namespace MyNotes
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
+        }
+
+        public new EmailService EmailService
+        {
+            get { return base.EmailService as EmailService; }
+            set { base.EmailService = value; }
         }
     }
 
