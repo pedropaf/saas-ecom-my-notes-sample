@@ -981,3 +981,7 @@ body {
     font-size: 16px;
     color: black;
 }
+
+.margin-bottom {
+    margin-bottom: 150px;
+}
