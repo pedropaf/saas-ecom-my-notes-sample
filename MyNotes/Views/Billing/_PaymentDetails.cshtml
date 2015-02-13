@@ -1,0 +1,23 @@
+﻿@model SaasEcom.Core.Models.CreditCard
+
+<h3>Payment Details</h3>
+<hr />
+
+@if (Model != null)
+{
+    const string strSpacer = "&nbsp;&nbsp;";
+
+    <p>
+        @if (Model.Type != "Unknown")
+        {
+            <img src="/Content/card-icons/@(Model.Type).png" style="max-width: 45px;" /> @Html.Raw(strSpacer)
+        }
+        **** **** **** @Model.Last4 @Html.Raw(strSpacer)
+        Expires @Model.ExpirationMonth/@Model.ExpirationYear @Html.Raw(strSpacer) @Html.Raw(strSpacer)
+        <a href="@Url.Action("ChangeCreditCard", new { id = Model.Id })">Change Credit Card</a>
+    </p>
+}
+else
+{
+    <p>You haven't entered your payment details yet. @Html.ActionLink("Add your Payment Details now.", "AddCreditCard")</p>
+}
