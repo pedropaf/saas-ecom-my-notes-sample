@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Configuration;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -6,6 +7,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MyNotes.Models;
+using SaasEcom.Core.DataServices.Storage;
+using SaasEcom.Core.Infrastructure.Facades;
+using SaasEcom.Core.Infrastructure.PaymentProcessor.Stripe;
 
 namespace MyNotes.Controllers
 {
@@ -46,6 +50,21 @@ namespace MyNotes.Controllers
             private set
             {
                 _userManager = value;
+            }
+        }
+
+        private SubscriptionsFacade _subscriptionsFacade;
+        private SubscriptionsFacade SubscriptionsFacade
+        {
+            get
+            {
+                return _subscriptionsFacade ?? (_subscriptionsFacade = new SubscriptionsFacade(
+                    new SubscriptionDataService<ApplicationDbContext, ApplicationUser>
+                        (HttpContext.GetOwinContext().Get<ApplicationDbContext>()),
+                    new SubscriptionProvider(ConfigurationManager.AppSettings["StripeApiSecretKey"]),
+                    new CardProvider(ConfigurationManager.AppSettings["StripeApiSecretKey"],
+                        new CardDataService<ApplicationDbContext, ApplicationUser>(Request.GetOwinContext().Get<ApplicationDbContext>())),
+                    new CustomerProvider(ConfigurationManager.AppSettings["StripeApiSecretKey"])));
             }
         }
 
@@ -153,8 +172,12 @@ namespace MyNotes.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    // Create Stripe user
+                    await SubscriptionsFacade.SubscribeNewUserAsync(user, model.SubscriptionPlan);
+                    await UserManager.UpdateAsync(user);
+
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    await _userManager.EmailService.SendWelcomeEmail(user.UserName, user.Email);
+                    await UserManager.EmailService.SendWelcomeEmail(user.UserName, user.Email);
 
                     return RedirectToAction("Index", "Home");
                 }
