@@ -13,7 +13,6 @@ namespace MyNotes.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         StripeId = c.String(),
-                        StripeToken = c.String(),
                         Name = c.String(nullable: false),
                         Last4 = c.String(),
                         Type = c.String(),
@@ -52,9 +51,9 @@ namespace MyNotes.Migrations
                         StartingBalance = c.Int(),
                         EndingBalance = c.Int(),
                         NextPaymentAttempt = c.DateTime(),
-                        Charge = c.Int(),
-                        Discount = c.Int(),
                         ApplicationFee = c.Int(),
+                        Tax = c.Int(),
+                        TaxPercent = c.Decimal(precision: 18, scale: 2),
                         Currency = c.String(),
                         BillingAddress_Name = c.String(),
                         BillingAddress_AddressLine1 = c.String(),
@@ -64,6 +63,10 @@ namespace MyNotes.Migrations
                         BillingAddress_ZipCode = c.String(),
                         BillingAddress_Country = c.String(),
                         BillingAddress_Vat = c.String(),
+                        Description = c.String(),
+                        StatementDescriptor = c.String(),
+                        ReceiptNumber = c.String(),
+                        Forgiven = c.Boolean(nullable: false),
                         Customer_Id = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
@@ -138,7 +141,6 @@ namespace MyNotes.Migrations
                         Interval = c.Int(nullable: false),
                         TrialPeriodInDays = c.Int(nullable: false),
                         Disabled = c.Boolean(nullable: false),
-                        ReasonToCancel = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -176,7 +178,7 @@ namespace MyNotes.Migrations
                         Plan_Currency = c.String(),
                         Plan_IntervalCount = c.Int(nullable: false),
                         Plan_TrialPeriodDays = c.Int(),
-                        Plan_StatementDescription = c.String(),
+                        Plan_StatementDescriptor = c.String(),
                         Invoice_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
