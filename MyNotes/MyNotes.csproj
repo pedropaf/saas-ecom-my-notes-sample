@@ -182,6 +182,9 @@
     <Compile Include="Controllers\BillingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\NotesController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controllers\StripeWebhooksController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -190,10 +193,17 @@
     <Compile Include="Migrations\201503132006353_Initial.Designer.cs">
       <DependentUpon>201503132006353_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503132026224_NotesAddedToModel.cs" />
+    <Compile Include="Migrations\201503132026224_NotesAddedToModel.Designer.cs">
+      <DependentUpon>201503132026224_NotesAddedToModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Note.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Views\Billing\ViewModels\FlashViewModels.cs" />
@@ -232,6 +242,11 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\saasecom.card.form.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Views\Notes\Create.cshtml" />
+    <Content Include="Views\Notes\Delete.cshtml" />
+    <Content Include="Views\Notes\Details.cshtml" />
+    <Content Include="Views\Notes\Edit.cshtml" />
+    <Content Include="Views\Notes\Index.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -298,6 +313,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201503132006353_Initial.resx">
       <DependentUpon>201503132006353_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503132026224_NotesAddedToModel.resx">
+      <DependentUpon>201503132026224_NotesAddedToModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
