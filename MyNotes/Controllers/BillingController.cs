@@ -131,11 +131,11 @@ namespace MyNotes.Controllers
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                 await SubscriptionsFacade.UpdateSubscriptionAsync(user.Id, user.StripeCustomerId, model.NewPlan);
 
-                // TempData.Add("flash", new FlashSuccessViewModel("Your subscription plan has been updated."));
+                TempData.Add("flash", new FlashSuccessViewModel("Your subscription plan has been updated."));
             }
             else
             {
-                // TempData.Add("flash", new FlashSuccessViewModel("Sorry, there was an error updating your plan, try again or contact support."));
+                TempData.Add("flash", new FlashSuccessViewModel("Sorry, there was an error updating your plan, try again or contact support."));
             }
 
             return RedirectToAction("Index");
@@ -158,11 +158,11 @@ namespace MyNotes.Controllers
                 if (currentSubscription != null &&
                     (endDate = await SubscriptionsFacade.EndSubscriptionAsync(currentSubscription.Id, user, true, model.Reason)) != null)
                 {
-                    // TempData.Add("flash", new FlashSuccessViewModel("Your subscription has been cancelled."));
+                    TempData.Add("flash", new FlashSuccessViewModel("Your subscription has been cancelled."));
                 }
                 else
                 {
-                    // TempData.Add("flash", new FlashDangerViewModel("Sorry, there was a problem cancelling your subscription."));
+                    TempData.Add("flash", new FlashDangerViewModel("Sorry, there was a problem cancelling your subscription."));
                 }
 
                 return RedirectToAction("Index", "Billing");
@@ -179,11 +179,11 @@ namespace MyNotes.Controllers
             if (currentSubscription != null &&
                 await SubscriptionsFacade.UpdateSubscriptionAsync(user.Id, user.StripeCustomerId, currentSubscription.SubscriptionPlanId))
             {
-                // TempData.Add("flash", new FlashSuccessViewModel("Your subscription plan has been re-activated."));
+                TempData.Add("flash", new FlashSuccessViewModel("Your subscription plan has been re-activated."));
             }
             else
             {
-                // TempData.Add("flash", new FlashDangerViewModel("Ooops! There was a problem re-activating your subscription. Please, try again."));
+                TempData.Add("flash", new FlashDangerViewModel("Ooops! There was a problem re-activating your subscription. Please, try again."));
             }
 
             return RedirectToAction("Index");
@@ -204,9 +204,10 @@ namespace MyNotes.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+
                 await CardService.AddAsync(user, model.CreditCard);
 
-                // TempData.Add("flash", new FlashSuccessViewModel("Your credit card has been saved successfully."));
+                TempData.Add("flash", new FlashSuccessViewModel("Your credit card has been saved successfully."));
 
                 return RedirectToAction("Index");
             }
@@ -247,7 +248,7 @@ namespace MyNotes.Controllers
                 var user = await UserManager.FindByIdAsync(userId);
                 await CardService.UpdateAsync(user, model.CreditCard);
                 
-                // TempData.Add("flash", new FlashSuccessViewModel("Your credit card has been updated successfully."));
+                TempData.Add("flash", new FlashSuccessViewModel("Your credit card has been updated successfully."));
                 
                 return RedirectToAction("Index");
             }
@@ -271,7 +272,7 @@ namespace MyNotes.Controllers
                 // TODO: Call your service to save the billing address
 
 
-                // TempData.Add("flash", new FlashSuccessViewModel("Your billing address has been saved."));
+                TempData.Add("flash", new FlashSuccessViewModel("Your billing address has been saved."));
 
                 return RedirectToAction("Index");
             }
