@@ -43,11 +43,13 @@ namespace MyNotes.Controllers
         // GET: Notes
         public async Task<ActionResult> Index()
         {
+            var userId = User.Identity.GetUserId();
+
             var userNotes =
                 await
-                    _db.Users.Where(u => u.Id == User.Identity.GetUserId())
+                    _db.Users.Where(u => u.Id == userId)
                         .Include(u => u.Notes)
-                        .Select(u => u.Notes)
+                        .SelectMany(u => u.Notes)
                         .ToListAsync();
 
             return View(userNotes);
@@ -61,7 +63,12 @@ namespace MyNotes.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            ICollection<Note> userNotes = (await _db.Users.Where(u => u.Id == User.Identity.GetUserId()).Include(u => u.Notes).Select(u => u.Notes).FirstOrDefaultAsync());
+            var userId = User.Identity.GetUserId();
+            ICollection<Note> userNotes = (
+                await _db.Users.Where(u => u.Id == userId)
+                .Include(u => u.Notes).Select(u => u.Notes)
+                .FirstOrDefaultAsync());
+
             if (userNotes == null)
             {
                 return HttpNotFound();
@@ -93,7 +100,12 @@ namespace MyNotes.Controllers
                 if (await UserHasEnoughSpace(User.Identity.GetUserId()))
                 {
                     note.CreatedAt = DateTime.UtcNow;
-                    _db.Notes.Add(note);
+
+                    // The note is added to the user object so the Foreign Key is saved too
+                    var userId = User.Identity.GetUserId();
+                    var user = await this._db.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+                    user.Notes.Add(note);
+
                     await _db.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }

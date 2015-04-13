@@ -7,10 +7,12 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using MyNotes.Extensions;
 using MyNotes.Models;
 using MyNotes.Views.SaasEcom.ViewModels;
 using SaasEcom.Core.DataServices.Storage;
 using SaasEcom.Core.Infrastructure.Facades;
+using SaasEcom.Core.Infrastructure.Helpers;
 using SaasEcom.Core.Infrastructure.PaymentProcessor.Stripe;
 
 namespace MyNotes.Controllers
@@ -173,18 +175,23 @@ namespace MyNotes.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userIP = GeoLocation.GetUserIP(Request);
                 var user = new ApplicationUser
                 {
                     UserName = model.Email, 
                     Email = model.Email,
                     RegistrationDate = DateTime.UtcNow,
-                    LastLoginTime = DateTime.UtcNow
+                    LastLoginTime = DateTime.UtcNow,
+                    IPAddress = userIP,
+                    IPAddressCountry = GeoLocationHelper.GetCountryFromIP(userIP),
                 };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     // Create Stripe user
-                    await SubscriptionsFacade.SubscribeUserAsync(user, model.SubscriptionPlan);
+                    var taxPercent = EuropeanVat.Countries.ContainsKey(user.IPAddressCountry) ? 
+                        EuropeanVat.Countries[user.IPAddressCountry] : 0;
+                    await SubscriptionsFacade.SubscribeUserAsync(user, model.SubscriptionPlan, taxPercent: taxPercent);
                     await UserManager.UpdateAsync(user);
 
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
