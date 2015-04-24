@@ -189,7 +189,7 @@ namespace MyNotes.Controllers
                 if (result.Succeeded)
                 {
                     // Create Stripe user
-                    var taxPercent = EuropeanVat.Countries.ContainsKey(user.IPAddressCountry) ? 
+                    var taxPercent = user.IPAddressCountry != null && EuropeanVat.Countries.ContainsKey(user.IPAddressCountry) ? 
                         EuropeanVat.Countries[user.IPAddressCountry] : 0;
                     await SubscriptionsFacade.SubscribeUserAsync(user, model.SubscriptionPlan, taxPercent: taxPercent);
                     await UserManager.UpdateAsync(user);
