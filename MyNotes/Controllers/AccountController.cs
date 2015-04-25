@@ -175,7 +175,7 @@ namespace MyNotes.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userIP = GeoLocation.GetUserIP(Request);
+                var userIP = GeoLocation.GetUserIP(Request).Split(':').First();
                 var user = new ApplicationUser
                 {
                     UserName = model.Email, 
