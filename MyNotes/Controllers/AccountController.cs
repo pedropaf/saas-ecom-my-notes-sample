@@ -14,6 +14,7 @@ using SaasEcom.Core.DataServices.Storage;
 using SaasEcom.Core.Infrastructure.Facades;
 using SaasEcom.Core.Infrastructure.Helpers;
 using SaasEcom.Core.Infrastructure.PaymentProcessor.Stripe;
+using SaasEcom.Core.Models;
 
 namespace MyNotes.Controllers
 {
@@ -184,6 +185,7 @@ namespace MyNotes.Controllers
                     LastLoginTime = DateTime.UtcNow,
                     IPAddress = userIP,
                     IPAddressCountry = GeoLocationHelper.GetCountryFromIP(userIP),
+                    BillingAddress = new BillingAddress()
                 };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
