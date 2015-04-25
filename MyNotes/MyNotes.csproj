@@ -204,6 +204,10 @@
     <Compile Include="Migrations\201503132026224_NotesAddedToModel.Designer.cs">
       <DependentUpon>201503132026224_NotesAddedToModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504250124300_BillingAddressAddedToUser.cs" />
+    <Compile Include="Migrations\201504250124300_BillingAddressAddedToUser.Designer.cs">
+      <DependentUpon>201504250124300_BillingAddressAddedToUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -324,6 +328,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503132026224_NotesAddedToModel.resx">
       <DependentUpon>201503132026224_NotesAddedToModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504250124300_BillingAddressAddedToUser.resx">
+      <DependentUpon>201504250124300_BillingAddressAddedToUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
