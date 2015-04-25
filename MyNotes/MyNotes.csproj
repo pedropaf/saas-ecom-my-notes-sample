@@ -311,6 +311,7 @@
     <Content Include="Views\Billing\_PaymentDetails.cshtml" />
     <Content Include="Views\Billing\_Invoices.cshtml" />
     <Content Include="Views\Billing\_BillingAddress.cshtml" />
+    <Content Include="Views\Shared\_GoogleAnalytics.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
