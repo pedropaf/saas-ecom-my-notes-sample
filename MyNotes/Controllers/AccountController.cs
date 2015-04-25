@@ -193,7 +193,13 @@ namespace MyNotes.Controllers
                     // Create Stripe user
                     var taxPercent = user.IPAddressCountry != null && EuropeanVat.Countries.ContainsKey(user.IPAddressCountry) ? 
                         EuropeanVat.Countries[user.IPAddressCountry] : 0;
-                    await SubscriptionsFacade.SubscribeUserAsync(user, model.SubscriptionPlan, taxPercent: taxPercent);
+
+                    // if no plan set, default to professional
+                    var planId = string.IsNullOrEmpty(model.SubscriptionPlan)
+                        ? "professional_monthly"
+                        : model.SubscriptionPlan;
+
+                    await SubscriptionsFacade.SubscribeUserAsync(user, planId, taxPercent: taxPercent);
                     await UserManager.UpdateAsync(user);
 
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
