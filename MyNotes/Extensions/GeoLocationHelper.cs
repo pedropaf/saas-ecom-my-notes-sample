@@ -34,6 +34,10 @@
             {
                 country = null;
             }
+            catch (Exception ex)
+            {
+                country = null;
+            }
 
             return country;
         }
