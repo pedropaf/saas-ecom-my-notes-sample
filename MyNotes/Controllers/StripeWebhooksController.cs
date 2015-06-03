@@ -97,6 +97,9 @@ namespace MyNotes.Controllers
                     Invoice invoice = SaasEcom.Core.Infrastructure.Mappers.Map(stripeInvoice);
                     if (invoice != null && invoice.Total > 0)
                     {
+                        // TODO get the customer billing address, we still have to instantiate the address on the invoice
+                        invoice.BillingAddress = new BillingAddress();
+
                         await InvoiceDataService.CreateOrUpdateAsync(invoice);
 
                         // TODO: Send invoice by email
